@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -e
+
+xxd -p -c1 -g1 |
+awk '
+	{ $0 = sprintf("%d", "0x"$0) }
+	NR < 9 { next }
+	{
+		for (i = 0; i < 10; i++) {
+			if (i > 0)
+				printf " "
+			printf "%d", (i == $0 ? 1 : 0)
+		}
+		print ""
+	}
+'

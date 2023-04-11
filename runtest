@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -e
+PATH="$(pwd):$PATH"
+#rm -rf testenv
+#cp -r tests testenv
+#cd testenv
+cd tests
+for i in *; do
+	! [ -d "$i" ] && break
+	cd "$i"
+	echo Test "$i..."
+	./run
+	cd ..
+done

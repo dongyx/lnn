@@ -1,0 +1,6 @@
+#!/bin/sh
+
+set -e
+lnn train -Cq2i1i -b128 -r1 -i128 <train.vec >model.tmp
+lnn test -m model.tmp <test.vec |
+awk '{print "MSE:", $0} $1 < 0 || $1 > 1e-4 { exit(-1) }'

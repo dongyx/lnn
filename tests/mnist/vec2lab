@@ -1,0 +1,9 @@
+#!/usr/bin/awk -f
+
+{
+	max = 1;
+	for (i = 1; i <= NF; i++)
+		if ($i > $max)
+			max = i;
+	print max - 1
+}

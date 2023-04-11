@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -e
+t=$(mktemp /tmp/lnn.spam.XXXXXX)
+lnn train -C b408i1s </dev/null >$t
+acc=0
+max=0
+for ((i=0;i<64;i++)); do
+	lr=$(echo "(1-$acc)*200" | bc -l)
+	lnn train -i128 -b1024 -r$lr -m $t <train.sam >$t.swp
+	mv $t.swp $t
+	acc=$(
+		paste \
+			<(
+				<test.sam awk '{$NF=""}1' |
+				lnn run -m $t |
+				awk '{print ($0>0.5?1:0)}'
+			) \
+			<(awk '{print $NF}' test.sam) |
+		awk '$1==$2{e++}{n++}END{print e/n}'
+	)
+	if [ $(echo "$acc > $max" | bc -l) -eq 1 ]; then
+		max=$acc
+		cp $t model.tmp
+	fi
+done
+rm $t
+echo ACC: $max
+[ $(echo "$max>0.9" | bc -l) -eq 1 ]

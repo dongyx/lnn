@@ -1,0 +1,7 @@
+/lnn
+testenv
+*.local
+*.o
+*.swp
+*.tmp
+*.nosync

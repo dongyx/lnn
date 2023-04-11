@@ -1,0 +1,26 @@
+#!/bin/sh
+
+set -e
+
+labdiff()
+{
+	paste "$1" "$2" | awk '
+		{ n++ }
+		$1 == $2 { c++ }
+		END { print c/n }
+		
+	'
+}
+
+echo Preparing data...
+make -sj8
+mkdir -p run.tmp
+echo Training...
+lnn train -C x784i16s10m -r3 -b64 -i4096 <data.nosync/train.vec>run.tmp/model.nn
+echo Evaluating...
+lnn run -mrun.tmp/model.nn <data.nosync/test.in| ./vec2lab >run.tmp/run.lab
+labdiff run.tmp/run.lab data.nosync/test.lab |
+awk '
+	{ print "ACC:", $0 }
+	$0 < 0.9 { exit(-1) }
+'

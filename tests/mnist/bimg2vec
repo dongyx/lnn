@@ -1,0 +1,20 @@
+#!/bin/sh
+
+set -e
+
+xxd -p -c1 -g1 |
+awk '
+	{ $0 = sprintf("%d", "0x"$0) }
+	NR <= 8 { next }
+	NR <= 12 { h = h*256 + $0; next }
+	NR <= 16 { w = w*256 + $0; next }
+	NR == 17 { c = w*h }
+	{
+		printf "%f", $0/255
+		if (++i == c) {
+			printf "\n"
+			i = 0
+		} else
+			printf " "
+	}
+'
