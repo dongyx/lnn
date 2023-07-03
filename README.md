@@ -39,17 +39,17 @@ a 10-dimension input layer,
 a 5-dimension hidden layer,
 and a 2-dimension output layer.
 
-	$ lnn train -C q10i5s2s samples.txt >model.nn
+	$ lnn train -C q10i5s3m samples.txt >model.nn
 
 The `-C` option creates a new model with the structure specified by the argument.
-The argument here is `q10i5s2s`.
+The argument here is `q10i5s3m`.
 The first character `q` specifies the loss function to be the quadratic error.
-The following three strings `10i`, `5s`, `2s` represent that
+The following three strings `10i`, `5s`, `3m` represent that
 there are 3 layers,
 including the input layer,
-with dimensions 10, 5, 2, respectively.
+with dimensions 10, 5, 3, respectively.
 The character following each dimension specifies the activation function for that layer.
-Here `i` and `s` represent the identity function and the sigmoid function respectively ([Further Documentation](#further-documentation)).
+Here `i` ,`s`, `m` represent the identity function, the sigmoid function, and the softmax function, respectively ([Further Documentation](#further-documentation)).
 
 The remaining part of this chapter assumes that
 the network maps $R^n$ to $R^m$.
