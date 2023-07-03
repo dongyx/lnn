@@ -13,10 +13,10 @@
 #define SIZE_MAX ((size_t)-1)	/* C89 doesn't define SIZE_MAX */
 #endif
 #if SIZE_MAX < INT_MAX
-	#error Unexpected small SIZE_MAX
+#error Unexpected small SIZE_MAX
 #endif
 #if RAND_MAX < INT_MAX
-	#error Unexpected small RAND_MAX
+#error Unexpected small RAND_MAX
 #endif
 #define HEADER "LNN Model 1"
 #define MAXSPEC 256

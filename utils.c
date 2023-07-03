@@ -37,8 +37,10 @@ int intparse(char *s, char **next)
 		err("Invalid integer\n");
 	if (next)
 		*next = e;
+#if LONG_MAX > INT_MAX
 	if (buf < INT_MIN || buf > INT_MAX)
 		err("Integer out of range: %ld\n", buf);
+#endif
 	return buf;
 }
 
