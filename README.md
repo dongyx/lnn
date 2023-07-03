@@ -23,7 +23,7 @@ Installation
 It would be better to select a version from the [release page](https://github.com/dongyx/lnn/releases)
 than downloading the working code,
 unless you understand the status of the working code.
-The latest release is always recommended.
+The latest stable release is always recommended.
 
 	$ make
 	$ sudo make install
