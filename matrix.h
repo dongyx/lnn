@@ -12,8 +12,8 @@ void mxv(double *out, double *in, double **mtrx, int n, int m);
  */
 void mtxv(double *out, double *in, double **mtrx, int n, int m);
 
-/* vector multiplies vector trasposed
- * out += transpose(u).v
+/* vector multiplies vector transposed
+ * out += u . transpose(v)
  * u: m-d vector
  * v: n-d vector
  */
