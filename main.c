@@ -10,7 +10,7 @@
 #include "neunet.h"
 #include "diffable.h"
 #ifndef SIZE_MAX
-#define ((size_t)-1)	/* C89 doesn't define SIZE_MAX */
+#define SIZE_MAX ((size_t)-1)	/* C89 doesn't define SIZE_MAX */
 #endif
 #if SIZE_MAX < INT_MAX
 	#error Unexpected small SIZE_MAX
