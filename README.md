@@ -37,7 +37,7 @@ Getting Started
 The following call of LNN creates a network with
 a 10-dimension input layer,
 a 5-dimension hidden layer,
-and a 2-dimension output layer.
+and a 3-dimension output layer.
 
 	$ lnn train -C q10i5s3m samples.txt >model.nn
 
