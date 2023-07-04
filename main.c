@@ -233,7 +233,7 @@ void help(FILE *fp, int es)
 
 void version(void)
 {
-	puts("LNN 0.0.1");
+	puts("LNN 0.0.2");
 	puts("Copyright(c) 2023 DONG Yuxuan <https://www.dyx.name>");
 	exit(0);
 }
