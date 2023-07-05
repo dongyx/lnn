@@ -1,7 +1,19 @@
 LNN
 ===
 
-LNN (Little Neural Network) is a command-line C program running, training, and testing feedforward neural networks, with the following features.
+LNN (Little Neural Network) is a command-line program of feedforward neural networks aiming to **make easy tasks easily done**.
+The following Unix pipeline trains a network to sum real numbers.
+
+	$ seq 10000 \
+	| awk '{x=rand(); y=rand(); print x,y,x+y}' \
+	| lnn train -Cq2i1i -i1024 >model.nn
+
+The trained model could be used as an addition calculator.
+
+	$ echo 5 3 | lnn run -m model.nn
+	8.000000
+
+The key features of LNN are list below.
 
 - Light weight, containing only a standalone executable;
 - Serve as a Unix filter; Easy to work with other programs;
@@ -36,8 +48,8 @@ Getting Started
 
 The following call of LNN creates a network with
 a 10-dimension input layer,
-a 5-dimension hidden layer,
-and a 3-dimension output layer.
+a 5-dimension hidden layer with the sigmoid activation function,
+and a 3-dimension output layer with the softmax activation function.
 
 	$ lnn train -C q10i5s3m samples.txt >model.nn
 
