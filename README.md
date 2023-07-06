@@ -4,7 +4,7 @@ LNN
 LNN (Little Neural Network) is a command-line program of feedforward neural networks aiming to **make easy tasks easily done**.
 The following Unix pipeline trains a network to sum real numbers.
 
-	$ seq 10000 \
+	$ seq 1024 \
 	| awk '{x=rand(); y=rand(); print x,y,x+y}' \
 	| lnn train -Cq2i1i -i1024 >model.nn
 
