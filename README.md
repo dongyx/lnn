@@ -63,9 +63,9 @@ with dimensions 10, 5, 3, respectively.
 The character following each dimension specifies the activation function for that layer.
 Here `i` ,`s`, `m` represent the identity function, the sigmoid function, and the softmax function, respectively ([Further Documentation](#further-documentation)).
 
-The remaining part of this chapter assumes that
-the network maps $R^n$ to $R^m$.
-In words, it has a $n$-dimension input layer and $m$-dimension output layer.
+In the remaining part of this chapter,
+the dimension of input is denoted by $n$,
+and the dimension of output is denoted by $m$.
 
 LNN reads samples from the file operand, or, by default, the standard input. 
 The trained model is printed to the standard output in a text format.
