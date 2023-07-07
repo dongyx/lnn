@@ -2,12 +2,12 @@
 
 set -e
 t=$(mktemp /tmp/lnn.spam.XXXXXX)
-lnn train -C b408i1s </dev/null >$t
+lnn train -C b408i1s -s1219 </dev/null >$t
 acc=0
 max=0
 for ((i=0;i<64;i++)); do
 	lr=$(echo "(1-$acc)*200" | bc -l)
-	lnn train -i128 -b1024 -r$lr -m $t <train.sam >$t.swp
+	lnn train -i128 -b1024 -r$lr -m$t -s$i <train.sam >$t.swp
 	mv $t.swp $t
 	acc=$(
 		paste \

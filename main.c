@@ -29,8 +29,9 @@ static void train(int argc, char **argv);
 static void test(int argc, char **argv);
 static void help(FILE *fp, int es);
 static void version(void);
+static void creatmodel(int train);
 static void loadmodel(char *fn, int train);
-static void setnet(char *ns, int train);
+static void setnet(int train);
 static void dumpout(FILE *fp);
 static void dumpmodel(FILE *fp);
 static int loadtrainv(FILE *fp, double ***ivp, double ***tvp);
@@ -42,7 +43,6 @@ int main(int argc, char **argv)
 		help(stderr, -1);
 	argv++;
 	argc--;
-	srand(clock()^getpid());
 	if (!strcmp(*argv, "--help"))
 		help(stdout, 0);
 	else if (!strcmp(*argv, "--version"))
@@ -86,25 +86,34 @@ static void run(int argc, char **argv)
 
 static void train(int argc, char **argv)
 {
-	int ch, iters, bs, tot, i, j;
+	static char mfile[BUFSIZ];
+	int ch, iters, bs, tot, i, j, create;
 	double lr, l2, **iv, **tv;
 	FILE *fp;
 
+	create = -1;
+	srand(clock()^getpid());
 	iters = 32;
 	lr = 1;
 	bs = 0;
 	l2 = 0;
-	while ((ch = getopt(argc, argv, "m:C:i:r:b:R:")) != -1)
+	while ((ch = getopt(argc, argv, "m:C:i:r:b:R:s:")) != -1)
 		switch (ch) {
 		case 'm':
-			if (nlayer > 0 || lossf)
+			if (create >= 0)
 				help(stderr, -1);
-			loadmodel(optarg, 1);
+			create = 0;
+			strncpy(mfile, optarg, sizeof mfile);
+			if (mfile[sizeof mfile - 1])
+				err("File path too long: %s\n", optarg);
 			break;
 		case 'C':
-			if (nlayer > 0)
+			if (create >= 0)
 				help(stderr, -1);
-			setnet(optarg, 1);
+			create = 1;
+			strncpy(netspec, optarg, sizeof netspec);
+			if (netspec[sizeof netspec - 1])
+				err("Network spec too long: %s\n", optarg);
 			break;
 		case 'i':
 			iters = intparse(optarg, NULL);
@@ -126,12 +135,25 @@ static void train(int argc, char **argv)
 			if (l2 < 0)
 				err("The parameter of L2 regularization shall be non-negative\n");
 			break;
+		case 's':
+			srand(intparse(optarg, NULL));
+			break;
 		default:
 			help(stderr, -1);
 		}
+	switch (create) {
+	case 0:
+		loadmodel(mfile, 1);
+		break;
+	case 1:
+		creatmodel(1);
+		break;
+	default:
+		help(stderr, -1);
+	}
 	argc -= optind;
 	argv += optind;
-	if (argc > 1 || nlayer == 0 || !lossf)
+	if (argc > 1)
 		help(stderr, -1);
 	if (!(fp = argc ? fopen(*argv, "r") : stdin))
 		syserr();
@@ -211,12 +233,14 @@ void help(FILE *fp, int es)
 		"		Specify an existed model\n"
 		"	-R NUM\n"
 		"		Set the parameter of the L2 regularization\n"
-		"	-i NUM\n"
+		"	-i INT\n"
 		"		Set the number of iterations\n"
 		"	-r NUM\n"
 		"		Set the learning rate\n"
-		"	-b NUM\n"
+		"	-b INT\n"
 		"		Set the batch size\n"
+		"	-s INT\n"
+		"		Set the random seed\n"
 		"Options for Testing:\n"
 		"	-m FILE\n"
 		"		Specify the model\n"
@@ -238,10 +262,14 @@ void version(void)
 	exit(0);
 }
 
+static void creatmodel(int train)
+{
+	setnet(train);
+}
+
 static void loadmodel(char *fn, int train)
 {
 	static char fh[MAXSPEC];	/* file header */
-	static char ns[MAXSPEC];	/* net spec */
 	FILE *fp;
 	int i, j, k;
 
@@ -249,18 +277,18 @@ static void loadmodel(char *fn, int train)
 		syserr();
 	if (
 		!fgets(fh, sizeof fh, fp) ||
-		!fgets(ns, sizeof ns, fp)
+		!fgets(netspec, sizeof netspec, fp)
 	)
 		err("Invalid mode file: lack of meta data\n");
 	if (fh[i=strlen(fh)-1] != '\n')
 		err("Invalid mode file: header too long\n");
 	fh[i] = 0;
-	if (ns[i=strlen(ns)-1] != '\n')
+	if (netspec[i=strlen(netspec)-1] != '\n')
 		err("Invalid mode file: network spec too long\n");
-	ns[i] = 0;
+	netspec[i] = 0;
 	if (strcmp(fh, HEADER))
 		err("Invalid mode file: unknown header\n");
-	setnet(ns, train);
+	setnet(train);
 	for (k = 1; k < nlayer; k++) {
 		for (i = 0; i < net[k].n; i++)
 			for (j = 0; j < net[k-1].n; j++)
@@ -274,14 +302,12 @@ static void loadmodel(char *fn, int train)
 efmt:	err("Invalid model file\n");
 }
 
-static void setnet(char *ns, int train)
+static void setnet(int train)
 {
-	char *act;
+	char *ns, *act;
 	int n, dim, cons, units;
 
-	if (strlen(ns) >= sizeof netspec)
-		err("Network spec too long\n");
-	strcpy(netspec, ns);
+	ns = netspec;
 	cons = units = 0;
 	switch (*ns) {
 	case 'q':
