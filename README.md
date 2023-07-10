@@ -28,6 +28,7 @@ The key features of LNN are list below.
 - [Installation](#installation)
 - [Getting Started](#getting-started)
 - [Further Documentation](#further-documentation)
+- [Following News](#following-news)
 
 Installation
 ------------
@@ -113,3 +114,9 @@ Further Documentation
 It contains more details and examples for understanding the design and usage.
 
 - Calling `lnn --help` prints a brief of the command-line options.
+
+Following News
+--------------
+
+- [Author's homepage](https://www.dyx.name)
+- [Twitter](https://twitter.com/dongyx2)
