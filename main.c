@@ -12,9 +12,6 @@
 #ifndef SIZE_MAX
 #define SIZE_MAX ((size_t)-1)	/* C89 doesn't define SIZE_MAX */
 #endif
-#if SIZE_MAX < INT_MAX
-#error Unexpected small SIZE_MAX
-#endif
 #if RAND_MAX < INT_MAX
 #error Unexpected small RAND_MAX
 #endif
@@ -39,6 +36,9 @@ static int loadtrainv(FILE *fp, double ***ivp, double ***tvp);
 int main(int argc, char **argv)
 {
 	progname = argv[0];
+	if (SIZE_MAX < INT_MAX)
+		err(	"LNN can't run on this system: " \
+			"SIZE_MAX too small\n");
 	if (argc <= 1)
 		help(stderr, -1);
 	argv++;

@@ -1,6 +1,7 @@
 .PHONY: test install clean
 
 CC=cc
+LIBS=-lm
 INSTALL=install
 prefix=/usr/local
 bindir=$(prefix)/bin
@@ -8,7 +9,7 @@ bindir=$(prefix)/bin
 all: lnn
 
 lnn: main.o utils.o matrix.o neunet.o diffable.o
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
 
 main.o: main.c utils.h neunet.h diffable.h
 	$(CC) $(CFLAGS) -c -o $@ $<
