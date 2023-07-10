@@ -4,6 +4,7 @@
 #include "utils.h"
 #include "matrix.h"
 #include "neunet.h"
+#define PI 3.141592653
 
 struct layer net[MAXLAYER];
 int nlayer;
@@ -134,9 +135,14 @@ static void update(double lr, double l2, int n)
 	}
 }
 
+/* Generate standard Gaussian random number by Box–Muller transform */
 static double randlf(void)
 {
-	return (double)rand()/RAND_MAX*2-1;
+	double u, v;
+
+	u = (rand()+1.0) / (RAND_MAX+2.0);
+	v = (rand()+1.0) / (RAND_MAX+2.0);
+	return sqrt(-2*log(u)) * cos(2*PI*v);
 }
 
 static void check(struct layer *l)
