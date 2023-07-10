@@ -91,49 +91,42 @@ static void train(int argc, char **argv)
 	double lr, l2, **iv, **tv;
 	FILE *fp;
 
-	create = -1;
 	srand(clock()^getpid());
+	create = -1;
+	l2 = -1;
 	iters = 32;
 	lr = 1;
-	bs = 0;
+	bs = -1;
 	l2 = 0;
 	while ((ch = getopt(argc, argv, "m:C:i:r:b:R:s:")) != -1)
 		switch (ch) {
 		case 'm':
-			if (create >= 0)
-				help(stderr, -1);
 			create = 0;
 			strncpy(mfile, optarg, sizeof mfile);
 			if (mfile[sizeof mfile - 1])
 				err("File path too long: %s\n", optarg);
 			break;
 		case 'C':
-			if (create >= 0)
-				help(stderr, -1);
 			create = 1;
 			strncpy(netspec, optarg, sizeof netspec);
 			if (netspec[sizeof netspec - 1])
 				err("Network spec too long: %s\n", optarg);
 			break;
 		case 'i':
-			iters = intparse(optarg, NULL);
-			if (iters <= 0)
-				err("Training iterations shall be positive\n");
+			if ((iters = intparse(optarg, NULL)) < 0)
+				err("Invalid iteration count\n");
 			break;
 		case 'r':
-			lr = lfparse(optarg);
-			if (lr <= 0)
-				err("Learning rate shall be positive\n");
+			if ((lr = lfparse(optarg)) < 0)
+				err("Invalid learning rate\n");
 			break;
 		case 'b':
-			bs = intparse(optarg, NULL);
-			if (bs <= 0)
-				err("Batch size shall be positive\n");
+			if ((bs = intparse(optarg, NULL)) < 0)
+				err("Invalid batch size\n");
 			break;
 		case 'R':
-			l2 = lfparse(optarg);
-			if (l2 < 0)
-				err("The parameter of L2 regularization shall be non-negative\n");
+			if ((l2 = lfparse(optarg)) < 0)
+				err("Invalid L2-regularization parameter\n");
 			break;
 		case 's':
 			srand(intparse(optarg, NULL));
@@ -149,7 +142,7 @@ static void train(int argc, char **argv)
 		creatmodel(1);
 		break;
 	default:
-		help(stderr, -1);
+		err("Expect -m or -C\n");
 	}
 	argc -= optind;
 	argv += optind;
@@ -158,7 +151,7 @@ static void train(int argc, char **argv)
 	if (!(fp = argc ? fopen(*argv, "r") : stdin))
 		syserr();
 	if ((tot = loadtrainv(fp, &iv, &tv)) > 0) {
-		if (bs <= 0 || bs >= tot)
+		if (bs < 0 || bs > tot)
 			bs = tot;
 		while (iters-- > 0) {
 			for (i = 0; i < bs; i++) {
