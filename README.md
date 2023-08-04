@@ -29,6 +29,7 @@ The key features of LNN are list below.
 - [Getting Started](#getting-started)
 - [Further Documentation](#further-documentation)
 - [Following News](#following-news)
+- [Credits](#credits)
 
 Installation
 ------------
@@ -120,3 +121,10 @@ Following News
 
 - [Author's homepage](https://www.dyx.name)
 - [Twitter](https://twitter.com/dongyx2)
+
+Credits
+-------
+
+LNN was created by [DONG Yuxuan](https://www.dyx.name) in 2023.
+
+[Juuso Alasuutari](https://github.com/imaami) gave useful advice about portability.
