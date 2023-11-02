@@ -116,12 +116,6 @@ It contains more details and examples for understanding the design and usage.
 
 - Calling `lnn --help` prints a brief of the command-line options.
 
-Following News
---------------
-
-- [Author's homepage](https://www.dyx.name)
-- [Twitter](https://twitter.com/dongyx2)
-
 Credits
 -------
 
